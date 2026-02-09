@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal del Alumno - DE CERO A CIEN</title>
+    <link rel="icon" href="/assets/logo_de_cero_a_cien_blanco_y_dorado.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles/tailwind.css">
+    <link rel="stylesheet" href="assets/styles/common.css">
+    <link rel="stylesheet" href="assets/styles/mobile.css">
+    
+    <!-- Firebase cargado de forma centralizada por assets/js/components.js -->
+</head>
+<body class="antialiased base-container">
+
+    <!-- HEADER UNIFICADO -->
+    <header class="header-component"></header>
+
+    <main>
+        <!-- Welcome Section -->
+        <section class="py-16 sm:py-20">
+            <div class="container mx-auto max-w-7xl px-6">
+                <h1 class="text-4xl sm:text-5xl font-black text-slate-200">Tu Centro de Formación</h1>
+                <p class="mt-4 text-lg text-gray-400 max-w-3xl">Todo lo que necesitas para tu transformación está aquí. ¡A construir!</p>
+            </div>
+        </section>
+
+        <!-- Dashboard Grid -->
+        <section class="pb-20 sm:pb-28">
+            <div class="container mx-auto max-w-7xl px-6">
+                <!-- Progreso Global (render dinámico) -->
+                <div class="dashboard-card rounded-lg p-6 mb-10" data-progress-dashboard>
+                    <h2 class="text-2xl font-bold text-white mb-4">Tu Progreso</h2>
+                    <div class="text-gray-400 text-sm animate-pulse">Cargando progreso...</div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Columna Izquierda: Acompañamiento y Biblioteca -->
+                    <div class="lg:col-span-1 space-y-8">
+                        <!-- Identidad (RUT) -->
+                        <div class="dashboard-card rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-white mb-4">Tu Identidad</h2>
+                            <p class="text-sm text-gray-400 mb-4">Para certificados y reportes a entidades públicas, necesitamos tu nombre completo y RUT.</p>
+                            <form id="identityForm" class="space-y-3">
+                                <div>
+                                    <label for="firstName" class="block text-sm text-slate-400">Nombre</label>
+                                    <input id="firstName" type="text" class="input" placeholder="Tu nombre" />
+                                </div>
+                                <div>
+                                    <label for="lastName" class="block text-sm text-slate-400">Apellido</label>
+                                    <input id="lastName" type="text" class="input" placeholder="Tu apellido" />
+                                </div>
+                                <div>
+                                    <label for="rut" class="block text-sm text-slate-400">RUT</label>
+                                    <input id="rut" type="text" class="input" placeholder="12.345.678-5" />
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <button id="identitySaveBtn" type="submit" class="btn">Guardar</button>
+                                    <span id="identityStatus" class="text-sm text-slate-400"></span>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Acompañamiento -->
+                        <div class="dashboard-card rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-white mb-4">Acompañamiento</h2>
+                            <p class="text-sm text-gray-400 mb-6">Tu mentoría semanal en vivo. Aquí resolvemos dudas, revisamos avances y crecemos en comunidad.</p>
+                            <div class="bg-slate-800 p-4 rounded-md text-center">
+                                <p class="text-sm text-gray-400">Próxima Sesión:</p>
+                                <p class="font-bold text-lg text-accent-gold">Viernes, 12 de Septiembre, 19:00 (GTM-3)</p>
+                                <a href="https://meet.google.com/txx-bkxy-cfm" target="_blank" class="btn-live mt-4 block">
+                                    Unirse a la Sesión en Vivo
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Biblioteca -->
+                        <div class="dashboard-card rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-white mb-4">Biblioteca</h2>
+                            <p class="text-sm text-gray-400 mb-6">Tu material de apoyo y recursos descargables para profundizar en cada fase.</p>
+                            <ul class="space-y-3">
+                                <li><a href="javascript:void(0)" aria-disabled="true" title="Próximamente" class="flex items-center text-slate-300 cursor-not-allowed opacity-70"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>Cuaderno de Trabajo (Próximamente)</a></li>
+                                <li><a href="javascript:void(0)" aria-disabled="true" title="Próximamente" class="flex items-center text-slate-300 cursor-not-allowed opacity-70"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Grabaciones de Mentorías (Próximamente)</a></li>
+                                <li><a href="javascript:void(0)" aria-disabled="true" title="Próximamente" class="flex items-center text-slate-300 cursor-not-allowed opacity-70"><svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>Plantillas y Recursos (Próximamente)</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Gamificación -->
+                        <div class="dashboard-card rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-white mb-4">Gamificación</h2>
+                            <p class="text-sm text-gray-400 mb-6">Aprende ejecutando con desafíos prácticos.</p>
+                            <a href="gamificacion/index.html" class="inline-block font-semibold highlight-text">Ir a los Desafíos &rarr;</a>
+                        </div>
+
+                        <!-- Acceso de Prueba $500 (con gating por test.clp500) -->
+                        <section class="dashboard-card rounded-lg p-6" data-entitlement="test.clp500" data-cta-override="/pago-prueba.html" data-cta-label="Comprar prueba $500">
+                            <h2 class="text-2xl font-bold text-white mb-1">Acceso de Prueba ($500)</h2>
+                            <p class="text-xs text-gray-400">Compra simbólica para validar el flujo real de pago y desbloqueo.</p>
+
+                            <div data-when="granted" class="mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-green-600/30 border border-green-500 text-green-300">Acceso activo</span>
+                                <p class="text-sm text-gray-400 mt-2">¡Listo! Ya puedes ver este contenido exclusivo de prueba.</p>
+                                <div class="mt-4 space-y-2 text-sm">
+                                    <p class="text-slate-200 font-semibold">Contenido de prueba:</p>
+                                    <ul class="list-disc list-inside text-gray-300">
+                                        <li>Enlace secreto 1: <a href="#" class="highlight-text">Cómo usar tu acceso</a></li>
+                                        <li>Enlace secreto 2: <a href="#" class="highlight-text">Recursos de ejemplo</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div data-when="denied" class="hidden mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-slate-700 border border-slate-600 text-gray-300">Aún no disponible</span>
+                                <p class="text-sm text-gray-400 mt-2">Haz la compra de prueba para desbloquear este bloque y validar la experiencia completa.</p>
+                                <!-- El CTA de compra se genera automáticamente -->
+                            </div>
+                        </section>
+
+                        <!-- Bonus: Formación Semilla -->
+                        <section class="dashboard-card rounded-lg p-6">
+                            <h2 class="text-2xl font-bold text-white mb-1">Bonus: Formación Semilla</h2>
+                            <p class="text-xs text-gray-400">Cinco talleres introductorios para tomar vuelo más rápido.</p>
+
+                            <div class="mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-green-600/30 border border-green-500 text-green-300">Disponible con registro</span>
+                                <p class="text-sm text-gray-400 mt-2">Accede gratis a todos los talleres introductorios.</p>
+                                <a href="formacion-semilla-talleres/index.html" class="mt-3 inline-block font-semibold highlight-text">Ir al Bonus &rarr;</a>
+                            </div>
+                        </section>
+
+                        <!-- Kids (con gating) -->
+                        <section class="dashboard-card rounded-lg p-6" data-entitlement="membership.pro" data-cta-label="Unirme a la Membresía">
+                            <h2 class="text-2xl font-bold text-white mb-1">De Cero a Cien Kids</h2>
+                            <p class="text-xs text-gray-400">Aprender jugando. 5 fases simples para niños.</p>
+                            <div data-when="granted" class="mt-4 flex items-center gap-2">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-green-600/30 border border-green-500 text-green-300">Acceso activo</span>
+                                <a href="comunidad/kids.html" class="ml-auto inline-block font-semibold highlight-text">Explorar &rarr;</a>
+                            </div>
+                            <div data-when="denied" class="hidden mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-slate-700 border border-slate-600 text-gray-300">Aún no disponible</span>
+                                <p class="text-sm text-gray-400 mt-2">Requiere membresía activa.</p>
+                                <!-- CTA por defecto: Unirme a la Membresía (academy) -->
+                            </div>
+                        </section>
+
+                        <!-- Gamificación: Contenido (con gating) -->
+                        <section class="dashboard-card rounded-lg p-6" data-entitlement="membership.pro" data-cta-label="Unirme a la Membresía">
+                            <h2 class="text-2xl font-bold text-white mb-1">Gamificación · Contenido</h2>
+                            <p class="text-xs text-gray-400">Todos los mini‑juegos y desafíos en un solo lugar.</p>
+                            <div data-when="granted" class="mt-4 flex items-center gap-2">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-green-600/30 border border-green-500 text-green-300">Acceso activo</span>
+                                <a href="gamificacion/contenido.html" class="ml-auto inline-block font-semibold highlight-text">Explorar &rarr;</a>
+                            </div>
+                            <div data-when="denied" class="hidden mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-slate-700 border border-slate-600 text-gray-300">Aún no disponible</span>
+                                <p class="text-sm text-gray-400 mt-2">Requiere membresía activa.</p>
+                            </div>
+                        </section>
+
+                        <!-- Talent (con gating) -->
+                        <section class="dashboard-card rounded-lg p-6" data-entitlement="membership.pro" data-cta-label="Unirme a la Membresía">
+                            <h2 class="text-2xl font-bold text-white mb-1">Talent</h2>
+                            <p class="text-xs text-gray-400">Conecta talento certificado con proyectos de alto impacto.</p>
+                            <div data-when="granted" class="mt-4 flex items-center gap-2">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-green-600/30 border border-green-500 text-green-300">Acceso activo</span>
+                                <a href="liderazgo/index.html" class="ml-auto inline-block font-semibold highlight-text">Explorar &rarr;</a>
+                            </div>
+                            <div data-when="denied" class="hidden mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-slate-700 border border-slate-600 text-gray-300">Aún no disponible</span>
+                                <p class="text-sm text-gray-400 mt-2">Requiere membresía activa.</p>
+                            </div>
+                        </section>
+
+                        <!-- Servicios Empresariales (con gating) -->
+                        <section class="dashboard-card rounded-lg p-6" data-entitlement="membership.pro" data-cta-label="Unirme a la Membresía">
+                            <h2 class="text-2xl font-bold text-white mb-1">Servicios Empresariales</h2>
+                            <p class="text-xs text-gray-400">Conferencias, Desarrollo y Marketing para tu empresa.</p>
+                            <div data-when="granted" class="mt-4 flex items-center gap-2">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-green-600/30 border border-green-500 text-green-300">Acceso activo</span>
+                                <a href="servicios-empresariales/index.html" class="ml-auto inline-block font-semibold highlight-text">Explorar &rarr;</a>
+                            </div>
+                            <div data-when="denied" class="hidden mt-4">
+                                <span class="inline-block text-xs px-2 py-1 rounded bg-slate-700 border border-slate-600 text-gray-300">Aún no disponible</span>
+                                <p class="text-sm text-gray-400 mt-2">Requiere membresía activa.</p>
+                            </div>
+                        </section>
+                        
+                    </div>
+
+                    <!-- Columna Derecha: El Taller (Ahora por Cursos) -->
+                    <div class="lg:col-span-2 dashboard-card rounded-lg p-6">
+                        <h2 class="text-2xl font-bold text-white mb-4">El Taller: Tus Cursos y Herramientas</h2>
+                        <p class="text-sm text-gray-400 mb-6">Accede a las micro-herramientas de cada curso que has adquirido. Cada una es un paso práctico en la construcción de tu negocio.</p>
+                        
+                                <div class="space-y-4">
+                            <!-- Curso 1 -->
+                                     <details class="course-accordion bg-slate-800/50 p-4 rounded-lg cursor-pointer" open data-entitlement="course.pmv">
+                                <summary class="text-lg font-semibold flex justify-between items-center text-slate-200">Curso 1: De la Idea al PMV (Fases 1 y 2) <span class="text-2xl highlight-text">+</span></summary>
+                                          <div data-when="granted" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/1_Generador_de_Modelo_de_Negocio.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Modelo de Negocio</a>
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/2_Generador_de_Buyer_Persona_con_IA.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Buyer Persona</a>
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/3_Calculadora_de_Viabilidad_Inicial.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Calculadora de Viabilidad</a>
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/4_Extractor_de_Tamaño_de_Mercado.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Extractor de Mercado</a>
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/5_Mapa_de_Competidores.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Mapa de Competidores</a>
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/6_Constructor_de_Guion_de_Entrevista.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Constructor de Entrevista</a>
+                                    <a href="de-cero-a-cien-fases/fase-1-de0a100/7_Generador_de_Elevator_Pitch.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Elevator Pitch</a>
+                                    <a href="de-cero-a-cien-fases/fase-2-de0a100/1_Generador_de_historias_de_usuario.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Historias de Usuario</a>
+                                    <a href="de-cero-a-cien-fases/fase-2-de0a100/2_Matriz_de_Priorización_(MoSCoW).html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Matriz de Priorización</a>
+                                    <a href="de-cero-a-cien-fases/fase-2-de0a100/3_Creador_de_Hoja_de_Ruta_del_Producto.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Creador de Hoja de Ruta</a>
+                                    <a href="de-cero-a-cien-fases/fase-2-de0a100/4_Definidor_de_Métricas_de_Éxito.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Definidor de Métricas</a>
+                                    <a href="de-cero-a-cien-fases/fase-2-de0a100/5_Planificador_de_Lanzamiento.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Planificador de Lanzamiento</a>
+                                    <a href="de-cero-a-cien-fases/fase-2-de0a100/6Diseñador_de_Flujo_de_Usuario.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Diseñador de Flujo de Usuario</a>
+                                          </div>
+                                          <div data-when="denied" class="hidden mt-4"></div>
+                            </details>
+
+                            <!-- Curso 2 -->
+                                      <details class="course-accordion bg-slate-800/50 p-4 rounded-lg cursor-pointer" data-entitlement="course.pmf">
+                                <summary class="text-lg font-semibold flex justify-between items-center text-slate-200">Curso 2: Tracción y Product-Market Fit (Fase 3) <span class="text-2xl highlight-text">+</span></summary>
+                                          <div data-when="granted" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                    <a href="de-cero-a-cien-fases/fase-3-de0a100/1Dashboard_de_Métricas_Clave.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Dashboard de Métricas Clave</a>
+                                    <a href="de-cero-a-cien-fases/fase-3-de0a100/2Sistema_de_Recolección_de_Feedback.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Sistema de Recolección de Feedback</a>
+                                    <a href="de-cero-a-cien-fases/fase-3-de0a100/3Calculadora_de_Product-Market_Fit.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Calculadora de Product-Market Fit</a>
+                                    <a href="de-cero-a-cien-fases/fase-3-de0a100/4Calcula_la_Rentabilidad_por_Cliente.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Analizador de Unit Economics</a>
+                                    <a href="de-cero-a-cien-fases/fase-3-de0a100/5Motor_de_Pruebas_AB.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Motor de Pruebas A/B</a>
+                                    <a href="de-cero-a-cien-fases/fase-3-de0a100/6Generador_de_Estrategia_Go-To-Market.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Estrategia Go-To-Market</a>
+                                          </div>
+                                          <div data-when="denied" class="hidden mt-4"></div>
+                            </details>
+
+                            <!-- Curso 3 -->
+                                      <details class="course-accordion bg-slate-800/50 p-4 rounded-lg cursor-pointer" data-entitlement="course.growth">
+                                <summary class="text-lg font-semibold flex justify-between items-center text-slate-200">Curso 3: Crecimiento y Escalabilidad (Fase 4) <span class="text-2xl highlight-text">+</span></summary>
+                                          <div data-when="granted" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                    <a href="de-cero-a-cien-fases/fase-4-de0a100/1Analiza_tu_Embudo_de_Conversión.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Optimizador de Embudos</a>
+                                    <a href="de-cero-a-cien-fases/fase-4-de0a100/2Generador_de_Calendario_Editorial_con_IA.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Calendario Editorial</a>
+                                    <a href="de-cero-a-cien-fases/fase-4-de0a100/3Generador_de_Proyecciones_Financieras.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Generador de Proyecciones Financieras</a>
+                                    <a href="de-cero-a-cien-fases/fase-4-de0a100/5Constructor_de_Pitch_Deck.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Constructor de Pitch Deck</a>
+                                    <a href="de-cero-a-cien-fases/fase-4-de0a100/4Planificador_de_Contratación.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Planificador de Contratación</a>
+                                    <a href="de-cero-a-cien-fases/fase-4-de0a100/6Manual_de_Operaciones_(Playbook).html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Manual de Operaciones</a>
+                                          </div>
+                                          <div data-when="denied" class="hidden mt-4"></div>
+                            </details>
+
+                            <!-- Curso 4 -->
+                                      <details class="course-accordion bg-slate-800/50 p-4 rounded-lg cursor-pointer" data-entitlement="course.ceo">
+                                <summary class="text-lg font-semibold flex justify-between items-center text-slate-200">Curso 4: Consolidación y Madurez (Fase 5) <span class="text-2xl highlight-text">+</span></summary>
+                                          <div data-when="granted" class="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                                    <a href="de-cero-a-cien-fases/fase-5-de0a100/1Simulador_de_Estrategias_de_Crecimiento.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Simulador de Estrategias de Crecimiento</a>
+                                    <a href="de-cero-a-cien-fases/fase-5-de0a100/2Dashboard_de_Salud_Financiera.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Dashboard de Salud Financiera</a>
+                                    <a href="de-cero-a-cien-fases/fase-5-de0a100/3Optimizador_de_Procesos_Clave.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Optimizador de Procesos Clave</a>
+                                    <a href="de-cero-a-cien-fases/fase-5-de0a100/4Constructor_de_Manual_de_Cultura.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Constructor de Manual de Cultura</a>
+                                    <a href="de-cero-a-cien-fases/fase-5-de0a100/5Simulador_de_Gobierno_Corporativo.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Simulador de Gobierno Corporativo</a>
+                                    <a href="de-cero-a-cien-fases/fase-5-de0a100/6Analizador_de_Escenarios_de_Salida.html" class="bg-slate-700 p-3 rounded-md hover:bg-slate-600 transition-colors">Analizador de Escenarios de Salida</a>
+                                          </div>
+                                          <div data-when="denied" class="hidden mt-4"></div>
+                            </details>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER UNIFICADO -->
+    <footer class="footer-component"></footer>
+
+    <!-- Orden: auth primero, luego demo/tracking y finalmente components.
+        Nota: entitlements.js ahora se carga automáticamente desde components.js
+        en rutas del portal/herramientas con cache-busting, para evitar errores de orden/caché. -->
+    <script src="assets/js/supabase-client.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/demo-full-access.js"></script>
+    <script src="assets/js/tracking-demo.js"></script>
+    <script src="assets/js/portal.js"></script>
+    <script src="assets/js/components.js"></script>
+
+        <script>
+            (function(){
+                async function getToken(){
+                    try { return (await window.SupabaseAuth.getAccessToken()) || localStorage.getItem('deceroacien_token'); } catch(_){ return localStorage.getItem('deceroacien_token'); }
+                }
+                function setStatus(msg, ok){
+                    var el = document.getElementById('identityStatus'); if (!el) return;
+                    el.textContent = msg || '';
+                    el.style.color = ok ? '#34d399' : '#94a3b8';
+                }
+                window.addEventListener('DOMContentLoaded', function(){
+                    var form = document.getElementById('identityForm'); if (!form) return;
+                    form.addEventListener('submit', async function(ev){
+                        ev.preventDefault();
+                        setStatus('Guardando…');
+                        const payload = {
+                            first_name: document.getElementById('firstName').value.trim() || null,
+                            last_name: document.getElementById('lastName').value.trim() || null,
+                            rut: document.getElementById('rut').value.trim() || null
+                        };
+                        try {
+                            const token = await getToken();
+                            const base = (window.PublicAuthConfig && window.PublicAuthConfig.api && window.PublicAuthConfig.api.baseUrl) || '/api';
+                            const r = await fetch(base + '/users/identity', {
+                                method: 'POST',
+                                headers: { 'content-type': 'application/json', Authorization: 'Bearer ' + token },
+                                body: JSON.stringify(payload)
+                            });
+                            if (!r.ok) {
+                                const body = await r.json().catch(()=>({}));
+                                setStatus(body && body.error === 'invalid_rut' ? 'RUT inválido' : 'Error al guardar', false);
+                                return;
+                            }
+                            setStatus('Actualizado ✓', true);
+                        } catch (e) {
+                            setStatus('Error de red', false);
+                        }
+                    });
+                });
+            })();
+        </script>
+
+</body>
+</html>
+
