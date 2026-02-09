@@ -39,3 +39,6 @@ Descargas Gratuitas
 Conferencias
 Soluciones a Medida
 Liderazgo
+
+## Resolver enrutamiento de frontend
+- Verificar que portal-alumno sirva las rutas de frontend\public\de-cero-a-cien-fases
