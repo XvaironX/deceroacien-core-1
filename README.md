@@ -20,3 +20,22 @@ Mini producto de practica para De Cero a Cien con frontend estatico, backend Fla
 - Enunciado y alcance: `docs/enunciado-practica.md`.
 - Mapa de arquitectura: `docs/arquitectura.md`.
 - Esquema de BD: `backend/schema.sql`.
+
+
+## ELIMINAR DEL REPO
+- Eliminar cualquier referencia a secciones de Camino Dorado
+Liderazgo
+Servicios Empresariales
+Academia
+Formación Semilla
+Alianzas
+Comunidad
+El Camino Dorado
+Servicios Empresariales
+Academy
+Gamificación
+Diagnósticos con IA
+Descargas Gratuitas
+Conferencias
+Soluciones a Medida
+Liderazgo
