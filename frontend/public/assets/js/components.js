@@ -336,13 +336,6 @@ class HeaderComponent extends BaseComponent {
             <a href="${this.basePath}index.html" data-priority="0" class="header-link ${this.currentPage === 'index' ? 'active' : ''}">Inicio</a>
             <a href="${this.basePath}nosotros.html" data-priority="1" class="header-link ${this.currentPage === 'nosotros' ? 'active' : ''}">Nosotros</a>
             <a href="${this.basePath}de-cero-a-cien.html" data-priority="2" class="header-link ${this.currentPage === 'de-cero-a-cien' ? 'active' : ''}">De Cero a Cien</a>
-            <a href="${this.basePath}camino-dorado.html" data-priority="3" class="header-link ${this.currentPage === 'camino-dorado' ? 'active' : ''}">Camino Dorado</a>
-            <a href="${this.basePath}liderazgo/index.html" data-priority="4" class="header-link ${this.currentPage === 'liderazgo' ? 'active' : ''}">Liderazgo</a>
-            <a href="${this.basePath}servicios.html" data-priority="5" class="header-link ${this.currentPage === 'servicios' ? 'active' : ''}">Servicios Empresariales</a>
-            <a href="${this.basePath}academy-fases/index.html" data-priority="6" class="header-link ${this.currentPage === 'academy' ? 'active' : ''}">Academia</a>
-            <a href="${this.basePath}formacion-semilla-talleres/index.html" data-priority="7" class="header-link ${this.currentPage === 'formacion-semilla' ? 'active' : ''}">Formación Semilla</a>
-            <a href="${this.basePath}alianzas.html" data-priority="8" class="header-link ${this.currentPage === 'alianzas' ? 'active' : ''}">Alianzas</a>
-            <a href="${this.basePath}comunidad/conecta.html" data-priority="9" class="header-link ${this.currentPage === 'comunidad' ? 'active' : ''}">Comunidad</a>
                 </div>
 
                 <!-- Menú overflow "Más" (desktop) -->
@@ -541,13 +534,6 @@ class HeaderComponent extends BaseComponent {
         <a href="${this.basePath}index.html" class="mobile-menu-link">Inicio</a>
         <a href="${this.basePath}nosotros.html" class="mobile-menu-link">Nosotros</a>
         <a href="${this.basePath}de-cero-a-cien.html" class="mobile-menu-link">De Cero a Cien</a>
-        <a href="${this.basePath}camino-dorado.html" class="mobile-menu-link">Camino Dorado</a>
-        <a href="${this.basePath}liderazgo/index.html" class="mobile-menu-link">Liderazgo</a>
-        <a href="${this.basePath}servicios.html" class="mobile-menu-link">Servicios Empresariales</a>
-        <a href="${this.basePath}academy-fases/index.html" class="mobile-menu-link">Academia</a>
-        <a href="${this.basePath}formacion-semilla-talleres/index.html" class="mobile-menu-link">Formación Semilla</a>
-        <a href="${this.basePath}alianzas.html" class="mobile-menu-link">Alianzas</a>
-        <a href="${this.basePath}comunidad/conecta.html" class="mobile-menu-link">Comunidad</a>
         <a href="${this.basePath}contacto.html" class="mobile-menu-link">Contacto</a>
                 <div class="mobile-menu-auth">
                     <a href="#" class="mobile-auth-link">Ingresa</a>
@@ -994,16 +980,6 @@ class FooterComponent extends BaseComponent {
                     <div class="footer-section">
                         <h3>Recursos</h3>
                         <ul>
-                <li><a href="${this.basePath}camino-dorado.html" class="footer-link ${this.currentPage === 'camino-dorado' ? 'active' : ''}">El Camino Dorado</a></li>
-                <li><a href="${this.basePath}servicios.html" class="footer-link">Servicios Empresariales</a></li>
-                <li><a href="${this.basePath}academy-fases/index.html" class="footer-link ${this.currentPage === 'academy' ? 'active' : ''}">Academy</a></li>
-                <li><a href="${this.basePath}gamificacion/index.html" class="footer-link ${this.currentPage === 'gamificacion' ? 'active' : ''}">Gamificación</a></li>
-                <li><a href="${this.basePath}diagnosticos-ai.html" class="footer-link ${this.currentPage === 'diagnosticos-ai' ? 'active' : ''}">Diagnósticos con IA</a></li>
-                <li><a href="${this.basePath}descargas-gratuitas.html" class="footer-link ${this.currentPage === 'descargas-gratuitas' ? 'active' : ''}">Descargas Gratuitas</a></li>
-                <li><a href="${this.basePath}servicios-empresariales/conferencias/index.html" class="footer-link ${this.currentPage === 'conferencias' ? 'active' : ''}">Conferencias</a></li>
-                <li><a href="${this.basePath}soluciones-a-medida.html" class="footer-link ${this.currentPage === 'soluciones-a-medida' ? 'active' : ''}">Soluciones a Medida</a></li>
-
-                <li><a href="${this.basePath}liderazgo/index.html" class="footer-link ${this.currentPage === 'liderazgo' ? 'active' : ''}">Liderazgo</a></li>
             </ul>
         </div>
 

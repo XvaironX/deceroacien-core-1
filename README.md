@@ -40,8 +40,6 @@ Conferencias
 Soluciones a Medida
 Liderazgo
 
-## Resolver enrutamiento de frontend
-- Verificar que portal-alumno sirva las rutas de frontend\public\de-cero-a-cien-fases
 
 ## Arreglar error en Auth/Components.js/466:40
 - error sobre auth/me
