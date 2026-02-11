@@ -1221,7 +1221,9 @@ class AppManager {
      * Inicializa todos los componentes de la página
      */
     initializeComponents() {
-    // Inicializar Header
+        this.renderPortalTopbar();
+
+        // Inicializar Header
         const headerElement = document.querySelector('.header-component');
         if (headerElement) {
             const header = new HeaderComponent(headerElement);
@@ -1245,10 +1247,62 @@ class AppManager {
             this.components.set(`card-${index}`, card);
         });
 
-    // Inicializar botón flotante de WhatsApp global
-    const whatsappBtn = new WhatsAppButtonComponent();
-    whatsappBtn.init();
-    this.components.set('whatsapp', whatsappBtn);
+        // Inicializar botón flotante de WhatsApp global
+        const whatsappBtn = new WhatsAppButtonComponent();
+        whatsappBtn.init();
+        this.components.set('whatsapp', whatsappBtn);
+    }
+
+    renderPortalTopbar() {
+        const placeholder = document.querySelector('[data-portal-topbar]');
+        if (!placeholder || this.portalTopbarInitialized) return;
+
+        this.portalTopbarInitialized = true;
+        const base = GlobalConfig.basePath || '';
+
+        const escapeHtml = (value = '') => String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+
+        const resolveFirstName = () => {
+            try {
+                if (window.authManager && typeof window.authManager.isUserAuthenticated === 'function' && window.authManager.isUserAuthenticated()) {
+                    const user = window.authManager.getCurrentUser();
+                    if (user && user.firstName) return user.firstName;
+                }
+            } catch (_) {}
+            try {
+                const cached = localStorage.getItem('deceroacien_user');
+                if (cached) {
+                    const parsed = JSON.parse(cached);
+                    if (parsed && parsed.firstName) return parsed.firstName;
+                }
+            } catch (_) {}
+            return 'Usuario';
+        };
+
+        const render = () => {
+            const firstName = escapeHtml(resolveFirstName());
+            placeholder.innerHTML = `
+                <div class="sticky top-0 z-50 bg-[#0a192f]/80 backdrop-blur-lg border-b border-gray-800">
+                    <nav class="container mx-auto max-w-7xl px-6 py-3 flex justify-between items-center">
+                        <a href="${base}portal-alumno.html" class="text-lg font-bold highlight-text">← Volver al Centro de Formación</a>
+                        <span class="text-sm text-slate-300">Bienvenido, ${firstName}</span>
+                    </nav>
+                </div>
+            `;
+        };
+
+        render();
+        [400, 1200, 2400].forEach(delay => setTimeout(render, delay));
+        window.addEventListener('storage', (event) => {
+            if (!event || event.key === 'deceroacien_user') {
+                setTimeout(render, 50);
+            }
+        });
     }
 
     /**
