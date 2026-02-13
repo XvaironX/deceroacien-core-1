@@ -975,6 +975,11 @@ class FooterComponent extends BaseComponent {
                 <li><a href="${this.basePath}faq.html" class="footer-link ${this.currentPage === 'faq' ? 'active' : ''}">FAQ</a></li>
             </ul>
                     </div>
+                    
+                    <!-- Sección: Recursos -->
+                    <div class="footer-section">
+                        <ul>
+            </ul>
         </div>
 
                     <!-- Sección: Legal -->
