@@ -11,14 +11,14 @@ import { Storage } from '@google-cloud/storage';
 // Config
 const PORT = process.env.PORT || 3001;
 const BASE_PATH = process.env.BASE_PATH || '/api';
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://deceroacien.app,https://www.deceroacien.app')
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000,https://deceroacien.cl,https://www.deceroacien.cl')
   .split(',')
   .map(s => s.trim())
   .filter(Boolean);
 const MP_ACCESS_TOKEN = process.env.MP_ACCESS_TOKEN || process.env.MERCADOPAGO_ACCESS_TOKEN || '';
 const MP_INTEGRATOR_ID = process.env.MP_INTEGRATOR_ID || '';
 const PUBLIC_API_BASE = process.env.PUBLIC_API_BASE || '';
-const PUBLIC_SITE_BASE = process.env.PUBLIC_SITE_BASE || 'https://www.deceroacien.app';
+const PUBLIC_SITE_BASE = process.env.PUBLIC_SITE_BASE || 'https://www.deceroacien.cl';
 const GRANT_SECRET = process.env.GRANT_SECRET || '';
 const CERT_BUCKET = process.env.CERT_BUCKET || '';
 const CERT_URL_MODE = (process.env.CERT_URL_MODE || 'signed').toLowerCase();
@@ -42,7 +42,7 @@ const SMTP_PORT = Number(process.env.SMTP_PORT || 587);
 const SMTP_SECURE = String(process.env.SMTP_SECURE || '').toLowerCase() === 'true';
 const SMTP_USER = process.env.SMTP_USER || '';
 const SMTP_PASS = process.env.SMTP_PASS || '';
-const SMTP_FROM = process.env.SMTP_FROM || 'no-reply@deceroacien.app';
+const SMTP_FROM = process.env.SMTP_FROM || 'no-reply@deceroacien.cl';
 const LEADS_NOTIFY_EMAIL = process.env.LEADS_NOTIFY_EMAIL || '';
 // Email via Resend (opcional)
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
