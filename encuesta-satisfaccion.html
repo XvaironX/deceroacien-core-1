@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encuesta de Satisfacción — DE CERO A CIEN</title>
+  <link rel="canonical" href="https://deceroacien.app/encuesta-satisfaccion.html" />
+  <meta name="description" content="Encuesta de satisfacción de la capacitación." />
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Encuesta de satisfacción</h1>
+    <p class="text-gray-300 mt-2">Tu opinión nos ayuda a mejorar. Responde sobre esta actividad.</p>
+
+    <form id="surveyForm" class="mt-6 p-4 rounded-lg bg-slate-800">
+      <div class="grid gap-5">
+        <div>
+          <label class="block text-sm mb-2">Método · Claridad de contenidos</label>
+          <select name="M" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2" required>
+            <option value="">Selecciona…</option>
+            <option value="1">1 - Muy en desacuerdo</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5 - Muy de acuerdo</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-2">Ambiente · Adecuación del entorno</label>
+          <select name="A" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2" required>
+            <option value="">Selecciona…</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-2">Nivel · Adecuación al público</label>
+          <select name="N" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2" required>
+            <option value="">Selecciona…</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-2">Objetivos · Cumplimiento</label>
+          <select name="O" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2" required>
+            <option value="">Selecciona…</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm mb-2">Comentarios (opcional)</label>
+          <textarea name="comentarios" class="w-full h-24 bg-slate-900 border border-slate-700 rounded px-3 py-2" placeholder="¿Qué te gustó? ¿Qué mejorarías?"></textarea>
+        </div>
+        <div>
+          <button id="sendBtn" class="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500">Enviar</button>
+          <span id="msg" class="ml-3 text-sm"></span>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <script src="/assets/js/auth.js"></script>
+  <script>
+    function getToken(){ try { return localStorage.getItem('deceroacien_token'); } catch(_) { return null; } }
+    async function api(path, opts={}){
+      const headers = Object.assign({ 'Accept': 'application/json', 'Content-Type': 'application/json' }, opts.headers||{});
+      const t = getToken(); if (t) headers['Authorization'] = 'Bearer ' + t;
+      const r = await fetch('/api'+path, Object.assign({}, opts, { headers }));
+      if (!r.ok) throw new Error('HTTP '+r.status);
+      const ct = r.headers.get('content-type')||''; return ct.includes('json') ? r.json() : r.text();
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!requireAuth()) return;
+      const form = document.getElementById('surveyForm');
+      form.addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const url = new URL(window.location.href);
+        const moduleId = url.searchParams.get('module') || 'modulo-general';
+        const data = new FormData(form);
+        const answers = { M: Number(data.get('M')), A: Number(data.get('A')), N: Number(data.get('N')), O: Number(data.get('O')) };
+        if (data.get('comentarios')) answers.comentarios = String(data.get('comentarios'));
+        const btn = document.getElementById('sendBtn'); const msg = document.getElementById('msg');
+        btn.disabled = true; msg.textContent = 'Enviando…';
+        try {
+          const res = await api('/surveys/satisfaction/'+encodeURIComponent(moduleId), { method:'POST', body: JSON.stringify({ answers }) });
+          msg.textContent = '¡Gracias! Tu respuesta fue registrada.';
+        } catch(e) {
+          msg.textContent = 'No se pudo enviar. Intenta nuevamente.';
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+  </script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

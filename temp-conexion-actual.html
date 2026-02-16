@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conexión en Vivo - De Cero a Cien</title>
+    <!-- Tailwind se inyecta centralizadamente por assets/js/components.js (sin CDN) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --azul-oscuro: #0A192F;
+            --azul-noche: #112240;
+            --dorado: #FBBF24;
+            --dorado-hover: #F59E0B;
+            --texto-claro: #E2E8F0;
+            --texto-secundario: #a7a9be;
+            --borde-sutil: #334155;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--azul-oscuro);
+            color: var(--texto-claro);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 1rem;
+        }
+        .container-card {
+            background-color: var(--azul-noche);
+            border: 1px solid var(--borde-sutil);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            max-width: 640px;
+            width: 100%;
+        }
+        .countdown {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 3rem;
+            color: var(--dorado);
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        @media (min-width: 640px) {
+            .countdown {
+                font-size: 5rem;
+            }
+        }
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 4rem;
+        }
+        .time-unit span:first-child {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        .time-unit span:last-child {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            color: var(--texto-secundario);
+            margin-top: 0.25rem;
+        }
+        .btn-play {
+            background-color: var(--dorado);
+            color: var(--azul-noche);
+            border-radius: 9999px;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-play:hover {
+            background-color: var(--dorado-hover);
+            transform: scale(1.1);
+        }
+        .btn-play:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .pulse {
+            animation: pulse-animation 2s infinite;
+        }
+        @keyframes pulse-animation {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-card">
+        <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mb-2">
+            Sala de Espera - Reunión en Vivo
+        </h1>
+        <p class="text-[var(--texto-secundario)] mb-4">
+            Serás redirigido automáticamente cuando comience la reunión
+        </p>
+        <p class="text-sm text-[var(--texto-secundario)] mb-2">
+            📅 Martes, 14 octubre · 12:00pm – 1:00pm
+        </p>
+        <p class="text-xs text-[var(--texto-secundario)] mb-4">
+            🌎 Zona horaria: America/Montevideo
+        </p>
+
+        <!-- Contador de Tiempo -->
+        <div class="countdown" id="countdown-timer">
+            <!-- Los valores del temporizador se insertarán aquí por JavaScript -->
+            <div class="time-unit" id="hours-unit" style="display: none;">
+                <span id="hours">00</span>
+                <span>horas</span>
+            </div>
+            <div class="time-unit">
+                <span id="minutes">00</span>
+                <span>minutos</span>
+            </div>
+            <div class="time-unit">
+                <span id="seconds">00</span>
+                <span>segundos</span>
+            </div>
+        </div>
+
+        <!-- Botón de Play/Pause y Reproductor de Audio -->
+        <div class="flex flex-col items-center">
+            <audio id="background-music" preload="metadata">
+                <source src="assets/audio/sientes-dudas-al-empezar.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+
+            <button id="play-pause-btn" class="btn-play mt-4 pulse" title="Reproducir música de espera (opcional)">
+                <i id="play-pause-icon" class="fas fa-play text-2xl"></i>
+            </button>
+            <p id="message" class="mt-4 text-[var(--texto-secundario)]">Inicializando sala de espera...</p>
+            <p class="text-xs text-[var(--texto-secundario)] mt-2 opacity-75">
+                💡 Puedes reproducir música de espera mientras aguardas
+            </p>
+            
+            <!-- Botón de prueba temporal -->
+            <button id="test-redirect" style="margin-top: 10px; padding: 8px 16px; background: #dc2626; color: white; border: none; border-radius: 5px; font-size: 12px; cursor: pointer;">
+                🧪 PRUEBA: Ir a reunión ahora
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('background-music');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const playPauseIcon = document.getElementById('play-pause-icon');
+            const messageEl = document.getElementById('message');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const hoursUnit = document.getElementById('hours-unit');
+            let countdownInterval;
+            let isAudioReady = false;
+
+            // CONFIGURACIÓN DE LA REUNIÓN
+            const MEETING_CONFIG = {
+                // Fecha y hora de la reunión: Martes, 14 octubre 2025 · 12:00pm
+                // Zona horaria: America/Montevideo (UTC-3)
+                date: '2025-10-14',
+                time: '12:00',
+                timezone: 'America/Montevideo',
+                meetingUrl: 'https://meet.google.com/ihf-paiw-baf'
+            };
+
+            // Función para calcular el tiempo restante hasta la reunión
+            const getTimeUntilMeeting = () => {
+                try {
+                    // Crear fecha/hora de la reunión en zona horaria de Montevideo (UTC-3)
+                    const meetingDateTime = new Date(`${MEETING_CONFIG.date}T${MEETING_CONFIG.time}:00-03:00`);
+                    const now = new Date();
+                    
+                    // Debug: mostrar fechas en consola
+                    console.log('Hora actual:', now.toISOString());
+                    console.log('Hora reunión:', meetingDateTime.toISOString());
+                    console.log('Hora reunión local:', meetingDateTime.toLocaleString());
+                    
+                    const timeDiff = meetingDateTime.getTime() - now.getTime();
+                    const secondsRemaining = Math.floor(timeDiff / 1000);
+                    
+                    console.log('Segundos restantes:', secondsRemaining);
+                    
+                    // Retorna segundos restantes (puede ser negativo si ya pasó)
+                    return Math.max(0, secondsRemaining);
+                } catch (error) {
+                    console.error('Error calculando tiempo:', error);
+                    return 0;
+                }
+            };
+
+            // Función para actualizar el contador
+            const updateCountdown = (timeInSeconds) => {
+                if (timeInSeconds <= 0) {
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
+                    hoursUnit.style.display = 'none';
+                    return;
+                }
+                
+                const hours = Math.floor(timeInSeconds / 3600);
+                const minutes = Math.floor((timeInSeconds % 3600) / 60);
+                const seconds = timeInSeconds % 60;
+                
+                // Mostrar horas solo si es mayor a 0
+                if (hours > 0) {
+                    hoursEl.textContent = String(hours).padStart(2, '0');
+                    hoursUnit.style.display = 'flex';
+                } else {
+                    hoursUnit.style.display = 'none';
+                }
+                
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+            };
+
+            // Función para redirigir a la reunión
+            const redirectToMeeting = () => {
+                console.log('Iniciando redirección a:', MEETING_CONFIG.meetingUrl);
+                messageEl.textContent = '¡Redirigiendo a la reunión...!';
+                // Pausa el audio si está reproduciéndose
+                if (!audio.paused) {
+                    audio.pause();
+                }
+                // Pequeño delay para que el usuario vea el mensaje
+                setTimeout(() => {
+                    console.log('Redirigiendo ahora...');
+                    window.location.href = MEETING_CONFIG.meetingUrl;
+                }, 2000);
+            };
+
+            // Función principal del countdown automático
+            const startAutomaticCountdown = () => {
+                const updateTimer = () => {
+                    const secondsRemaining = getTimeUntilMeeting();
+                    
+                    if (secondsRemaining <= 0) {
+                        // ¡Es hora de la reunión!
+                        clearInterval(countdownInterval);
+                        updateCountdown(0);
+                        redirectToMeeting();
+                        return;
+                    }
+                    
+                    updateCountdown(secondsRemaining);
+                    
+                    // Actualizar mensaje según el tiempo restante
+                    if (secondsRemaining > 3600) { // Más de 1 hora
+                        const hoursRemaining = Math.floor(secondsRemaining / 3600);
+                        messageEl.textContent = `Faltan ${hoursRemaining} hora(s) para la reunión. Relájate con la música de espera.`;
+                    } else if (secondsRemaining > 1800) { // Entre 30 minutos y 1 hora
+                        messageEl.textContent = 'La reunión comenzará en menos de una hora. ¡Prepárate!';
+                    } else if (secondsRemaining > 300) { // Entre 5-30 minutos
+                        messageEl.textContent = '¡La reunión comenzará pronto! Reproduce la música de espera.';
+                    } else if (secondsRemaining > 60) { // Entre 1-5 minutos
+                        messageEl.textContent = '🔔 ¡La reunión comenzará en menos de 5 minutos!';
+                    } else if (secondsRemaining > 30) { // Entre 30 segundos y 1 minuto
+                        messageEl.textContent = '⚡ ¡La reunión comenzará en menos de un minuto!';
+                        // Auto-reproducir música en el último minuto si no está sonando
+                        if (isAudioReady && audio.paused) {
+                            audio.play().catch(() => console.log('Auto-play bloqueado por el navegador'));
+                        }
+                    } else { // Menos de 30 segundos
+                        messageEl.textContent = '🚀 ¡Conectando en segundos...!';
+                    }
+                };
+
+                // Ejecutar inmediatamente y luego cada segundo
+                updateTimer();
+                countdownInterval = setInterval(updateTimer, 1000);
+            };
+
+            // Manejo del audio
+            audio.addEventListener('loadedmetadata', () => {
+                isAudioReady = true;
+                playPauseBtn.disabled = false;
+                playPauseBtn.classList.add('pulse');
+            });
+
+            audio.addEventListener('error', () => {
+                messageEl.textContent = 'Audio no disponible, pero el countdown continúa.';
+                playPauseBtn.disabled = true;
+                playPauseBtn.classList.remove('pulse');
+            });
+
+            audio.addEventListener('canplaythrough', () => {
+                if (!isAudioReady) {
+                    isAudioReady = true;
+                    playPauseBtn.disabled = false;
+                    playPauseBtn.classList.add('pulse');
+                }
+            });
+
+            // Controles de audio (opcionales para el usuario)
+            playPauseBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play().catch((err) => {
+                        console.error('Error al reproducir audio:', err);
+                        messageEl.textContent = 'Error al reproducir. El countdown continúa.';
+                    });
+                } else {
+                    audio.pause();
+                }
+            });
+
+            audio.addEventListener('play', () => {
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+                playPauseBtn.classList.remove('pulse');
+            });
+
+            audio.addEventListener('pause', () => {
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+                playPauseBtn.classList.add('pulse');
+            });
+            
+            // Botón de prueba temporal
+            document.getElementById('test-redirect').addEventListener('click', () => {
+                console.log('Prueba manual activada');
+                redirectToMeeting();
+            });
+
+            // Verificar si la reunión ya debe haber comenzado
+            const initialTimeCheck = getTimeUntilMeeting();
+            console.log('Verificación inicial - segundos restantes:', initialTimeCheck);
+            
+            if (initialTimeCheck <= 0) {
+                // La reunión ya debería haber comenzado
+                console.log('La reunión ya comenzó, redirigiendo...');
+                updateCountdown(0);
+                redirectToMeeting();
+            } else {
+                // Iniciar countdown automático
+                console.log('Iniciando countdown automático');
+                messageEl.textContent = 'Calculando tiempo hasta la reunión...';
+                startAutomaticCountdown();
+            }
+            
+            // Mostrar información de debug en la página (temporal)
+            const debugInfo = document.createElement('div');
+            debugInfo.style.cssText = 'position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; font-size: 12px; z-index: 9999; border-radius: 5px;';
+            debugInfo.innerHTML = `
+                <div>Hora actual: ${new Date().toLocaleString()}</div>
+                <div>Reunión: ${new Date('2025-10-14T12:00:00-03:00').toLocaleString()}</div>
+                <div>Segundos restantes: ${initialTimeCheck}</div>
+            `;
+            document.body.appendChild(debugInfo);
+            
+            // Remover debug info después de 10 segundos
+            setTimeout(() => {
+                if (debugInfo.parentNode) {
+                    debugInfo.parentNode.removeChild(debugInfo);
+                }
+            }, 10000);
+        });
+    </script>
+<script src="assets/js/components.js"></script>
+</body>
+</html>
