@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración — DE CERO A CIEN</title>
+  <link rel="canonical" href="https://deceroacien.app/admin/index.html" />
+  <!-- Estilos críticos primero para evitar FOUC -->
+  <link rel="stylesheet" href="/assets/styles/tailwind.css" />
+  <link rel="stylesheet" href="/assets/styles/common.css" />
+  <link rel="stylesheet" href="/assets/styles/mobile.css" />
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <main class="px-4 py-8">
+    <div class="max-w-7xl mx-auto">
+      <h1 class="text-2xl font-semibold">Panel de Administración</h1>
+      <p id="admin-alert" class="mt-2 text-red-400 hidden"></p>
+
+      <section class="mt-6">
+        <div id="metricsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+      </section>
+
+      <section class="mt-8">
+        <h2 class="text-lg font-semibold mb-3">Accesos rápidos</h2>
+        <nav class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <a class="block p-4 rounded-lg bg-slate-800 hover:bg-slate-700" href="/admin/usuarios.html"><i class="fa-solid fa-users mr-2"></i> Usuarios</a>
+          <a class="block p-4 rounded-lg bg-slate-800 hover:bg-slate-700" href="/admin/instituciones.html"><i class="fa-solid fa-building mr-2"></i> Instituciones</a>
+          <a class="block p-4 rounded-lg bg-slate-800 hover:bg-slate-700" href="/admin/calendario.html"><i class="fa-regular fa-calendar-days mr-2"></i> Calendario</a>
+          <a class="block p-4 rounded-lg bg-slate-800 hover:bg-slate-700" href="/admin/cursos.html"><i class="fa-solid fa-book mr-2"></i> Cursos</a>
+          <a class="block p-4 rounded-lg bg-slate-800 hover:bg-slate-700" href="/admin/parametros.html"><i class="fa-solid fa-sliders mr-2"></i> Parámetros</a>
+        </nav>
+      </section>
+    </div>
+  </main>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/admin.js"></script>
+  <script>
+    function metricCard(title, value, icon){
+      return `<div class="p-4 rounded-lg bg-slate-800 border border-slate-700">
+        <div class="text-sm text-gray-300 flex items-center gap-2"><i class="${icon}"></i><span>${title}</span></div>
+        <div class="mt-2 text-3xl font-semibold">${value}</div>
+      </div>`;
+    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      const me = await AdminHelpers.requireAdminScopes(['admin:tenants']);
+      if (!me) return;
+      try {
+        const [tenants, users, courses, activities] = await Promise.all([
+          AdminHelpers.apiFetch('/admin/tenants'),
+          AdminHelpers.apiFetch('/admin/users'),
+          AdminHelpers.apiFetch('/courses'),
+          AdminHelpers.apiFetch('/activities')
+        ]);
+        const grid = document.getElementById('metricsGrid');
+        const tCount = (tenants.items||[]).length;
+        const uCount = (users.items||[]).length;
+        const cCount = (courses.items||[]).length;
+        const aCount = (activities.items||[]).length;
+        grid.innerHTML = [
+          metricCard('Instituciones', tCount, 'fa-solid fa-building'),
+          metricCard('Usuarios', uCount, 'fa-solid fa-users'),
+          metricCard('Cursos', cCount, 'fa-solid fa-book'),
+          metricCard('Actividades', aCount, 'fa-regular fa-calendar-days')
+        ].join('');
+      } catch (e) {
+        console.warn('[admin] métricas no disponibles', e);
+      }
+    });
+  </script>
+  <script src="/assets/js/admin-layout.js"></script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

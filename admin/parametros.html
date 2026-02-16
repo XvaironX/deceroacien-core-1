@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Parámetros — DE CERO A CIEN</title>
+  <link rel="canonical" href="https://deceroacien.app/admin/parametros.html" />
+  <!-- Estilos críticos primero para evitar FOUC -->
+  <link rel="stylesheet" href="/assets/styles/tailwind.css" />
+  <link rel="stylesheet" href="/assets/styles/common.css" />
+  <link rel="stylesheet" href="/assets/styles/mobile.css" />
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Parámetros</h1>
+    <p id="admin-alert" class="mt-2 text-red-400 hidden"></p>
+
+    <section class="mt-6 p-4 rounded-lg bg-slate-800">
+      <div class="grid gap-3">
+        <label class="inline-flex items-center"><input type="checkbox" id="enableWhatsApp" class="mr-2" />Habilitar WhatsApp</label>
+        <label class="inline-flex items-center"><input type="checkbox" id="enableSMS" class="mr-2" />Habilitar SMS</label>
+        <label class="inline-flex items-center"><input type="checkbox" id="usersCreate" class="mr-2" />Creación de usuarios</label>
+        <label class="inline-flex items-center"><input type="checkbox" id="usersDelete" class="mr-2" />Eliminación de usuarios</label>
+      </div>
+      <div class="mt-4">
+        <button id="saveBtn" class="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500">Guardar</button>
+        <span id="saveMsg" class="ml-3 text-sm text-emerald-300"></span>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/admin.js"></script>
+  <script>
+    let current = {};
+    function bindFromData(){
+      document.getElementById('enableWhatsApp').checked = !!current.enableWhatsApp;
+      document.getElementById('enableSMS').checked = !!current.enableSMS;
+      document.getElementById('usersCreate').checked = !!current.usersCreate;
+      document.getElementById('usersDelete').checked = !!current.usersDelete;
+    }
+    function collect(){
+      return {
+        enableWhatsApp: document.getElementById('enableWhatsApp').checked,
+        enableSMS: document.getElementById('enableSMS').checked,
+        usersCreate: document.getElementById('usersCreate').checked,
+        usersDelete: document.getElementById('usersDelete').checked
+      };
+    }
+    async function load(){
+      const me = await AdminHelpers.requireAdminScopes(['admin:params']);
+      if (!me) return;
+      const r = await AdminHelpers.apiFetch('/admin/params');
+      current = r.data || {};
+      bindFromData();
+    }
+    async function save(){
+      current = Object.assign({}, current, collect());
+      await AdminHelpers.apiFetch('/admin/params', { method: 'PUT', body: JSON.stringify({ data: current }) });
+      document.getElementById('saveMsg').textContent = 'Guardado';
+    }
+    document.addEventListener('DOMContentLoaded', load);
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.getElementById('saveBtn').addEventListener('click', save);
+    });
+  </script>
+  <script src="/assets/js/admin-layout.js"></script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>
