@@ -43,3 +43,10 @@ Liderazgo
 
 ## Arreglar error en Auth/Components.js/466:40
 - error sobre auth/me
+
+## Enrutamientos .cl
+- cambiar deceroacien.app por deceroacien.cl de manera minuciosa cuidando no romper rutas.
+
+## ESTILOS
+- asociar estilos a docs legales
+

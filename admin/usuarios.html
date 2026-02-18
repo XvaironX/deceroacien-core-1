@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Usuarios — DE CERO A CIEN</title>
+  <link rel="canonical" href="https://deceroacien.app/admin/usuarios.html" />
+  <!-- Estilos críticos primero para evitar FOUC -->
+  <link rel="stylesheet" href="/assets/styles/tailwind.css" />
+  <link rel="stylesheet" href="/assets/styles/common.css" />
+  <link rel="stylesheet" href="/assets/styles/mobile.css" />
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Usuarios</h1>
+    <p id="admin-alert" class="mt-2 text-red-400 hidden"></p>
+
+    <section class="mt-6 p-4 rounded-lg bg-slate-800">
+      <h2 class="text-lg font-semibold mb-4">Otorgar acceso por licitación</h2>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm mb-1">Institución</label>
+          <select id="tenantSelect" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2"></select>
+        </div>
+        <div>
+          <label class="block text-sm mb-1">Rol a asignar</label>
+          <select id="roleSelect" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2"></select>
+        </div>
+      </div>
+      <div class="mt-4">
+        <label class="block text-sm mb-1">Correos de usuarios (uno por línea)</label>
+        <textarea id="emailsInput" class="w-full h-40 bg-slate-900 border border-slate-700 rounded px-3 py-2" placeholder="persona1@empresa.com\npersona2@empresa.com"></textarea>
+      </div>
+      <div class="mt-4">
+        <span class="block text-sm mb-1">Entitlements a otorgar</span>
+        <label class="inline-flex items-center mr-6"><input type="checkbox" id="entCE" class="mr-2">liderazgo.cuidando-equipo</label>
+        <label class="inline-flex items-center"><input type="checkbox" id="entGP" class="mr-2">liderazgo.gestion-personas</label>
+      </div>
+      <div class="mt-4">
+        <button id="grantBtn" class="px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500">Otorgar accesos</button>
+        <span id="grantMsg" class="ml-3 text-sm text-emerald-300"></span>
+      </div>
+    </section>
+
+    <section class="mt-8 p-4 rounded-lg bg-slate-800">
+      <h2 class="text-lg font-semibold mb-4">Listado de usuarios</h2>
+      <div class="mb-3">
+        <label class="block text-sm mb-1">Filtrar por institución</label>
+        <select id="filterTenant" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2"></select>
+      </div>
+      <div id="usersTable" class="overflow-auto"></div>
+    </section>
+  </main>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/admin.js"></script>
+  <script>
+    const tenants = [];
+    const roles = [];
+
+    function parseEmails(raw){
+      return (raw||'').split(/\n|,|;|\s+/).map(s=>s.trim()).filter(Boolean);
+    }
+
+    async function loadRoles() {
+      const r = await AdminHelpers.apiFetch('/admin/roles');
+      const sel = document.getElementById('roleSelect');
+      sel.innerHTML = '';
+      (r.roles||[]).forEach(role => {
+        const opt = document.createElement('option'); opt.value = role; opt.textContent = role;
+        sel.appendChild(opt);
+      });
+      sel.value = 'usuario';
+    }
+
+    async function loadTenants() {
+      const r = await AdminHelpers.apiFetch('/admin/tenants');
+      const tSel = document.getElementById('tenantSelect');
+      const fSel = document.getElementById('filterTenant');
+      tSel.innerHTML = ''; fSel.innerHTML = '';
+      r.items.forEach(it => {
+        const opt1 = document.createElement('option'); opt1.value = it.id; opt1.textContent = it.name; tSel.appendChild(opt1);
+        const opt2 = document.createElement('option'); opt2.value = it.id; opt2.textContent = it.name; fSel.appendChild(opt2);
+      });
+    }
+
+    async function loadUsers() {
+      const tenantId = document.getElementById('filterTenant').value || '';
+      const url = '/admin/users' + (tenantId ? ('?tenant_id='+encodeURIComponent(tenantId)) : '');
+      const r = await AdminHelpers.apiFetch(url);
+      const cols = [
+        { key: 'email', label: 'Email' },
+        { key: 'first_name', label: 'Nombre' },
+        { key: 'last_name', label: 'Apellido' },
+        { key: 'memberships', label: 'Membresías', render: (v)=> Array.isArray(v)? v.map(m=>`${m.tenant_id}:${m.role}`).join('<br>') : '' }
+      ];
+      AdminHelpers.renderTable('usersTable', r.items||[], cols);
+    }
+
+    async function doGrant(){
+      const tenantId = document.getElementById('tenantSelect').value;
+      const role = document.getElementById('roleSelect').value || 'usuario';
+      const emails = parseEmails(document.getElementById('emailsInput').value);
+      const entitlements = [];
+      if (document.getElementById('entCE').checked) entitlements.push('liderazgo.cuidando-equipo');
+      if (document.getElementById('entGP').checked) entitlements.push('liderazgo.gestion-personas');
+      if (!emails.length) { alert('Agrega al menos un correo.'); return; }
+      await AdminHelpers.apiFetch('/admin/tenants/'+encodeURIComponent(tenantId)+'/grant-access', {
+        method: 'POST',
+        body: JSON.stringify({ emails, entitlements, role })
+      });
+      document.getElementById('grantMsg').textContent = 'Accesos registrados. Se activarán al primer login de cada usuaria.';
+      document.getElementById('emailsInput').value='';
+      await loadUsers();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const me = await AdminHelpers.requireAdminScopes(['admin:users']);
+      if (!me) return;
+      await loadRoles();
+      await loadTenants();
+      await loadUsers();
+      document.getElementById('grantBtn').addEventListener('click', doGrant);
+      document.getElementById('filterTenant').addEventListener('change', loadUsers);
+    });
+  </script>
+  <script src="/assets/js/admin-layout.js"></script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment ID</title>
+  <link rel="stylesheet" href="/assets/styles/tailwind.css">
+  <link rel="stylesheet" href="/assets/styles/common.css">
+  <link rel="stylesheet" href="/assets/styles/mobile.css">
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/assets/logo_de_cero_a_cien.png" />
+</head>
+<body class="bg-gray-900 text-gray-100">
+  <main class="min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-xl w-full bg-gray-800 border border-gray-700 rounded-lg p-6">
+      <h1 class="text-2xl font-bold mb-4">Payment ID detectado</h1>
+      <p class="text-gray-300 mb-4">Usa este identificador en la certificación:</p>
+      <div id="pid" class="text-lg font-mono bg-black bg-opacity-40 p-3 rounded border border-gray-700"></div>
+      <p class="text-gray-400 text-sm mt-4">Otros parámetros:</p>
+      <pre id="all" class="text-xs bg-black bg-opacity-40 p-3 rounded border border-gray-700 overflow-x-auto"></pre>
+      <div class="mt-6 flex gap-3">
+        <a class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded" href="/pago-prueba.html">Nueva prueba</a>
+        <a class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" href="/">Inicio</a>
+      </div>
+    </div>
+  </main>
+  <script>
+    const q = new URLSearchParams(location.search);
+    // Mercadopago suele devolver collection_id o payment_id
+    const paymentId = q.get('payment_id') || q.get('collection_id') || '';
+    const prefId = q.get('preference_id') || '';
+    document.getElementById('pid').textContent = paymentId || '(no encontrado)';
+    const obj = Object.fromEntries(q.entries());
+    document.getElementById('all').textContent = JSON.stringify(obj, null, 2);
+  </script>
+  <script src="/assets/js/components.js"></script>
+  </body>
+  </html>

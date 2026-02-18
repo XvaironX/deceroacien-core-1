@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Instituciones — DE CERO A CIEN</title>
+  <link rel="canonical" href="https://deceroacien.app/admin/instituciones.html" />
+  <!-- Estilos críticos primero para evitar FOUC -->
+  <link rel="stylesheet" href="/assets/styles/tailwind.css" />
+  <link rel="stylesheet" href="/assets/styles/common.css" />
+  <link rel="stylesheet" href="/assets/styles/mobile.css" />
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Instituciones</h1>
+    <p id="admin-alert" class="mt-2 text-red-400 hidden"></p>
+
+    <section class="mt-6 p-4 rounded-lg bg-slate-800">
+      <h2 class="text-lg font-semibold mb-3">Crear/editar institución</h2>
+      <div class="grid sm:grid-cols-3 gap-3 items-end">
+        <div class="sm:col-span-2">
+          <label class="block text-sm mb-1">Nombre</label>
+          <input id="tenantName" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2" placeholder="Empresa XYZ" />
+        </div>
+        <div>
+          <button id="createBtn" class="w-full px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-500">Guardar</button>
+        </div>
+      </div>
+      <p id="msg" class="text-sm text-emerald-300 mt-2"></p>
+    </section>
+
+    <section class="mt-8 p-4 rounded-lg bg-slate-800">
+      <h2 class="text-lg font-semibold mb-3">Listado</h2>
+      <div id="tenantsTable"></div>
+    </section>
+  </main>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/admin.js"></script>
+  <script>
+    async function loadTenants(){
+      const r = await AdminHelpers.apiFetch('/admin/tenants');
+      const cols = [ { key: 'id', label: 'ID' }, { key: 'name', label: 'Nombre' } ];
+      AdminHelpers.renderTable('tenantsTable', r.items||[], cols);
+    }
+    async function createTenant(){
+      const name = document.getElementById('tenantName').value.trim();
+      if (!name) { alert('Ingresa un nombre'); return; }
+      await AdminHelpers.apiFetch('/admin/tenants', { method:'POST', body: JSON.stringify({ name })});
+      document.getElementById('tenantName').value = '';
+      document.getElementById('msg').textContent = 'Guardado';
+      await loadTenants();
+    }
+    document.addEventListener('DOMContentLoaded', async () => {
+      const me = await AdminHelpers.requireAdminScopes(['admin:tenants']);
+      if (!me) return;
+      await loadTenants();
+      document.getElementById('createBtn').addEventListener('click', createTenant);
+    });
+  </script>
+  <script src="/assets/js/admin-layout.js"></script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

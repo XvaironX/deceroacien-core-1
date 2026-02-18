@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pago aprobado</title>
+  <link rel="stylesheet" href="/assets/styles/tailwind.css">
+  <link rel="stylesheet" href="/assets/styles/common.css">
+  <link rel="stylesheet" href="/assets/styles/mobile.css">
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/assets/logo_de_cero_a_cien.png" />
+  <meta name="description" content="Estado del pago: aprobado." />
+  <script>window.__PAYMENT_STATE__ = 'approved';</script>
+</head>
+<body class="bg-gray-900 text-gray-100">
+  <main class="min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-lg w-full bg-gray-800 border border-gray-700 rounded-lg p-6 text-center">
+      <h1 class="text-2xl font-bold mb-2">¡Pago aprobado!</h1>
+      <p class="text-gray-300 mb-4">Muchas gracias. Estamos validando tu compra.</p>
+      <p class="text-sm text-gray-400 mb-6">Serás redirigido al Portal del Alumno en unos segundos…</p>
+      <a class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded" href="/portal-alumno.html">Ir ahora</a>
+    </div>
+  </main>
+  <script>
+    setTimeout(() => { location.href = '/portal-alumno.html' }, 2500);
+  </script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

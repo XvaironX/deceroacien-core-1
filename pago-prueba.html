@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Compra de prueba – $2.000 CLP</title>
+  <meta name="description" content="Página de prueba para validar el flujo de pago con Mercado Pago a $2.000 CLP." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/styles/tailwind.css">
+  <link rel="stylesheet" href="/assets/styles/common.css">
+  <link rel="stylesheet" href="/assets/styles/mobile.css">
+  <link rel="icon" href="/assets/logo_de_cero_a_cien.png" />
+</head>
+<body class="bg-gray-900 text-gray-100">
+  <main class="min-h-screen">
+    <section class="container mx-auto px-4 py-10">
+      <h1 class="text-2xl font-bold mb-2">Compra de prueba</h1>
+  <p class="text-gray-300 mb-6">Este producto cuesta $2.000 CLP. Úsalo para validar el flujo completo en producción.</p>
+
+  <div class="bg-gray-800 border border-gray-700 rounded-lg p-6 max-w-md">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="font-semibold">Compra de prueba (CLP 2.000)</p>
+            <p class="text-sm text-gray-400">SKU: test.clp2000</p>
+          </div>
+          <div id="price" class="text-lg font-semibold">$2.000</div>
+        </div>
+        <button id="buyBtn" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded">
+          Pagar $2.000 CLP con Mercado Pago
+        </button>
+        <p class="text-xs text-gray-400 mt-3">Tras el pago serás redirigido de vuelta y se otorgará acceso de prueba automáticamente.</p>
+        <div class="mt-6 text-sm text-gray-300 space-y-1">
+          <p class="font-semibold">Tips para pruebas (Checkout Pro):</p>
+          <ul class="list-disc pl-5 space-y-1 text-gray-400">
+            <li>Inicia sesión en el checkout con tu <span class="font-medium">comprador de prueba</span>.</li>
+            <li>Usa <span class="font-medium">tarjeta de prueba</span> y escribe <span class="font-medium">APRO</span> antes del nombre del titular.</li>
+            <li>Prueba con <span class="font-medium">MasterCard</span>; <span class="font-medium">Visa está excluida</span> por requisito de certificación.</li>
+            <li>Si ves el mensaje “No es posible continuar…”, elige otro medio (no Visa) y verifica el prefijo APRO.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/assets/js/pricing.js"></script>
+  <script src="/assets/js/payments.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await Pricing.load();
+  const p = Pricing.getProduct('test.clp2000');
+        const priceEl = document.getElementById('price');
+        if (p && priceEl) priceEl.textContent = Pricing.format(p.unit_price);
+      } catch {}
+      const btn = document.getElementById('buyBtn');
+      btn.addEventListener('click', async () => {
+        try {
+          await Pricing.load();
+        } catch {}
+        Payments.startCheckout({ items: ['test.clp2000'] });
+      });
+    });
+  </script>
+
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

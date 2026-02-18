@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Leads Recientes — DE CERO A CIEN</title>
+  <link rel="stylesheet" href="../assets/styles/tailwind.css" />
+  <link rel="stylesheet" href="../assets/styles/common.css" />
+  <link rel="stylesheet" href="../assets/styles/mobile.css" />
+</head>
+<body class="base-container antialiased">
+  <div id="admin-shell" class="min-h-screen grid grid-cols-1 lg:grid-cols-[280px_1fr]">
+    <aside id="admin-sidebar" class="bg-[#0a1f2f] text-slate-200"></aside>
+    <main class="p-6 lg:p-10">
+      <h1 class="text-2xl font-bold text-white mb-4">Leads Recientes</h1>
+      <div class="bg-[#112240] rounded-lg p-4 mb-4">
+        <form id="keyForm" class="flex flex-wrap gap-3 items-center">
+          <label class="text-sm text-slate-300">API Key</label>
+          <input id="apiKey" type="password" class="form-input !bg-[#0a1f2f]" placeholder="REPORTS_API_KEY" />
+          <label class="text-sm text-slate-300 flex items-center gap-2"><input id="remember" type="checkbox" /> Recordar en este navegador</label>
+          <button type="submit" class="btn-primary">Cargar</button>
+        </form>
+      </div>
+      <div id="status" class="text-sm text-slate-300 mb-2"></div>
+      <div class="overflow-auto rounded-lg border border-slate-700">
+        <table class="min-w-full text-sm">
+          <thead class="bg-[#0a1f2f] text-slate-300">
+            <tr>
+              <th class="px-3 py-2 text-left">Fecha</th>
+              <th class="px-3 py-2 text-left">Email</th>
+              <th class="px-3 py-2 text-left">Nombre</th>
+              <th class="px-3 py-2 text-left">Origen</th>
+              <th class="px-3 py-2 text-left">Tags</th>
+              <th class="px-3 py-2 text-left">Metadata</th>
+            </tr>
+          </thead>
+          <tbody id="tbody" class="divide-y divide-slate-800"></tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const apiBase = (window.PublicAuthConfig && window.PublicAuthConfig.api && window.PublicAuthConfig.api.baseUrl) || '/api';
+    function fmt(x){ try { return new Date(x||'').toLocaleString(); } catch { return x||''; } }
+    function setStatus(msg){ document.getElementById('status').textContent = msg||''; }
+    async function loadLeads(){
+      const k = document.getElementById('apiKey').value.trim();
+      if (!k) { setStatus('Ingresa API Key'); return; }
+      setStatus('Cargando...');
+      const r = await fetch(apiBase + '/admin/leads?limit=100', { headers: { 'x-api-key': k }});
+      const j = await r.json().catch(()=>({}));
+      if (!r.ok || !j.ok){ setStatus('Error: ' + (j.error||r.status)); return; }
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+      (j.items||[]).forEach(it => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="px-3 py-2 whitespace-nowrap text-slate-300">${fmt(it.updated_at||it.created_at)}</td>
+          <td class="px-3 py-2 text-slate-100">${it.email||''}</td>
+          <td class="px-3 py-2 text-slate-100">${it.name||''}</td>
+          <td class="px-3 py-2 text-slate-100">${it.source||''}</td>
+          <td class="px-3 py-2 text-slate-100">${(it.tags||[]).join(', ')}</td>
+          <td class="px-3 py-2 text-slate-400"><pre class="whitespace-pre-wrap text-xs">${JSON.stringify(it.metadata||{}, null, 2)}</pre></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      setStatus(`Mostrando ${ (j.items||[]).length } leads`);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('dc100_reports_api_key');
+      if (saved) { document.getElementById('apiKey').value = saved; }
+      document.getElementById('keyForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const remember = document.getElementById('remember').checked;
+        const v = document.getElementById('apiKey').value.trim();
+        if (remember) localStorage.setItem('dc100_reports_api_key', v); else localStorage.removeItem('dc100_reports_api_key');
+        loadLeads();
+      });
+    });
+  </script>
+
+  <script src="../assets/js/admin-layout.js"></script>
+  <script src="../assets/js/components.js"></script>
+</body>
+</html>

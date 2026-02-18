@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · Cursos — DE CERO A CIEN</title>
+  <link rel="canonical" href="https://deceroacien.app/admin/cursos.html" />
+  <!-- Estilos críticos primero para evitar FOUC -->
+  <link rel="stylesheet" href="/assets/styles/tailwind.css" />
+  <link rel="stylesheet" href="/assets/styles/common.css" />
+  <link rel="stylesheet" href="/assets/styles/mobile.css" />
+</head>
+<body class="bg-slate-900 text-white min-h-screen">
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold">Cursos</h1>
+    <p id="admin-alert" class="mt-2 text-red-400 hidden"></p>
+
+    <section class="mt-6 p-4 rounded-lg bg-slate-800">
+      <div id="coursesTable"></div>
+    </section>
+  </main>
+
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/admin.js"></script>
+  <script>
+    async function loadCourses(){
+      const me = await AdminHelpers.requireAdminScopes(['courses:read']);
+      if (!me) return;
+      const r = await AdminHelpers.apiFetch('/courses');
+      const cols = [
+        { key: 'id', label: 'ID' },
+        { key: 'title', label: 'Nombre' },
+        { key: 'hours_expected', label: 'Horas' },
+        { key: 'metadata', label: 'Metadata', render: (v)=> '<pre class="text-xs whitespace-pre-wrap">'+(v? JSON.stringify(v,null,2):'')+'</pre>' }
+      ];
+      AdminHelpers.renderTable('coursesTable', r.items||[], cols);
+    }
+    document.addEventListener('DOMContentLoaded', loadCourses);
+  </script>
+  <script src="/assets/js/admin-layout.js"></script>
+  <script src="/assets/js/components.js"></script>
+</body>
+</html>

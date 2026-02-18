@@ -970,18 +970,10 @@ class FooterComponent extends BaseComponent {
                 <li><a href="${this.basePath}index.html" class="footer-link ${this.currentPage === 'index' ? 'active' : ''}">Inicio</a></li>
                 <li><a href="${this.basePath}nosotros.html" class="footer-link ${this.currentPage === 'nosotros' ? 'active' : ''}">Nosotros</a></li>
                 <li><a href="${this.basePath}servicios.html" class="footer-link ${this.currentPage === 'servicios' ? 'active' : ''}">Servicios</a></li>
-                <li><a href="${this.basePath}metodologia.html" class="footer-link ${this.currentPage === 'metodologia' ? 'active' : ''}">Metodología</a></li>
-                <li><a href="${this.basePath}blog/index.html" class="footer-link ${this.currentPage === 'blog' ? 'active' : ''}">Blog</a></li>
                 <li><a href="${this.basePath}faq.html" class="footer-link ${this.currentPage === 'faq' ? 'active' : ''}">FAQ</a></li>
-            </ul>
+                        </ul>
                     </div>
                     
-                    <!-- Sección: Recursos -->
-                    <div class="footer-section">
-                        <h3>Recursos</h3>
-                        <ul>
-            </ul>
-        </div>
 
                     <!-- Sección: Legal -->
                     <div class="footer-section">
