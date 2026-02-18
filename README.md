@@ -23,7 +23,7 @@ Mini producto de practica para De Cero a Cien con frontend estatico, backend Fla
 
 
 ## ELIMINAR DEL REPO
-- Eliminar cualquier referencia a secciones de Camino Dorado
+- Eliminar cualquier referencia a secciones:
 Liderazgo
 Servicios Empresariales
 Academia
