@@ -8,100 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --azul-oscuro: #0A192F;
-            --azul-noche: #112240;
-            --dorado: #FBBF24;
-            --dorado-hover: #F59E0B;
-            --texto-claro: #E2E8F0;
-            --texto-secundario: #a7a9be;
-            --borde-sutil: #334155;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--azul-oscuro);
-            color: var(--texto-claro);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            padding: 1rem;
-        }
-        .container-card {
-            background-color: var(--azul-noche);
-            border: 1px solid var(--borde-sutil);
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            max-width: 640px;
-            width: 100%;
-        }
-        .countdown {
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            font-size: 3rem;
-            color: var(--dorado);
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-        }
-        @media (min-width: 640px) {
-            .countdown {
-                font-size: 5rem;
-            }
-        }
-        .time-unit {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-width: 4rem;
-        }
-        .time-unit span:first-child {
-            font-size: 1.5rem;
-            line-height: 1;
-        }
-        .time-unit span:last-child {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            color: var(--texto-secundario);
-            margin-top: 0.25rem;
-        }
-        .btn-play {
-            background-color: var(--dorado);
-            color: var(--azul-noche);
-            border-radius: 9999px;
-            width: 4rem;
-            height: 4rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-play:hover {
-            background-color: var(--dorado-hover);
-            transform: scale(1.1);
-        }
-        .btn-play:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .pulse {
-            animation: pulse-animation 2s infinite;
-        }
-        @keyframes pulse-animation {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-    </style>
+    <link rel="stylesheet" href="frontend/public/assets/styles/waiting-room.css">
 </head>
-<body>
+<body class="waiting-room">
 
     <div class="container-card">
         <h1 class="font-serif text-3xl md:text-4xl font-bold text-white mb-2">
@@ -120,7 +29,7 @@
         <!-- Contador de Tiempo -->
         <div class="countdown" id="countdown-timer">
             <!-- Los valores del temporizador se insertarán aquí por JavaScript -->
-            <div class="time-unit" id="hours-unit" style="display: none;">
+            <div class="time-unit is-hidden" id="hours-unit">
                 <span id="hours">00</span>
                 <span>horas</span>
             </div>
@@ -137,7 +46,7 @@
         <!-- Botón de Play/Pause y Reproductor de Audio -->
         <div class="flex flex-col items-center">
             <audio id="background-music" preload="metadata">
-                <source src="assets/audio/sientes-dudas-al-empezar.mp3" type="audio/mpeg">
+                <source src="frontend/public/assets/audio/sientes-dudas-al-empezar.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
 
@@ -150,7 +59,7 @@
             </p>
             
             <!-- Botón de prueba temporal -->
-            <button id="test-redirect" style="margin-top: 10px; padding: 8px 16px; background: #dc2626; color: white; border: none; border-radius: 5px; font-size: 12px; cursor: pointer;">
+            <button id="test-redirect" class="btn-test-redirect">
                 🧪 PRUEBA: Ir a reunión ahora
             </button>
         </div>
@@ -355,7 +264,7 @@
             
             // Mostrar información de debug en la página (temporal)
             const debugInfo = document.createElement('div');
-            debugInfo.style.cssText = 'position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; font-size: 12px; z-index: 9999; border-radius: 5px;';
+            debugInfo.className = 'debug-info';
             debugInfo.innerHTML = `
                 <div>Hora actual: ${new Date().toLocaleString()}</div>
                 <div>Reunión: ${new Date('2025-10-14T12:00:00-03:00').toLocaleString()}</div>
@@ -371,6 +280,6 @@
             }, 10000);
         });
     </script>
-<script src="assets/js/components.js"></script>
+<script src="frontend/public/assets/js/components.js"></script>
 </body>
 </html>

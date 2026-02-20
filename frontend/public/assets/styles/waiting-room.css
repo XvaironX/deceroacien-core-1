@@ -23,6 +23,10 @@ body.waiting-room {
     margin: 0;
 }
 
+.is-hidden {
+    display: none;
+}
+
 .container-card {
     background-color: var(--azul-noche);
     border: 1px solid var(--borde-sutil);
@@ -146,6 +150,23 @@ body.waiting-room {
     transition: width 0.2s ease;
 }
 
+.btn-test-redirect {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-test-redirect:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
 .timezone-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -182,6 +203,18 @@ body.waiting-room {
 .status-message.critical {
     color: #ef4444;
     font-weight: 700;
+}
+
+.debug-info {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.8);
+    color: #ffffff;
+    padding: 10px;
+    font-size: 12px;
+    z-index: 9999;
+    border-radius: 5px;
 }
 
 /* Estados especiales */
