@@ -50,3 +50,6 @@ Liderazgo
 ## ESTILOS
 - asociar estilos a docs legales
 
+## revision y correccion
+eliminar faltantes y correcciones de ruta
+verificar debug-auth.js
